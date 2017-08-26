@@ -4,13 +4,31 @@ using UnityEngine;
 
 public class bulletScript : MonoBehaviour
 {
-    public int Speed = 6;
+    public int Speed = 10;
+
+//    public Vector2 Velocity;
+    private Vector2 _velocity;
+
+    private Rigidbody2D _rb;
 
     // Use this for initialization
-    void Start()
+    private void Start()
     {
-        Rigidbody2D rb = GetComponent<Rigidbody2D>();
-        rb.velocity = new Vector2(0, Speed);
+        _rb = GetComponent<Rigidbody2D>();
+    }
+
+    private void FixedUpdate()
+    {
+        _velocity = new Vector2(0, Speed) * Time.deltaTime * Speed;
+        
+        //calculates delta position based on velocity and deltaTime
+        var deltaPosition = _velocity * Time.deltaTime;
+        
+        //calculates how much it should translate
+        var move = Vector2.up * deltaPosition.y;
+        
+        //actually translates the object
+        _rb.transform.Translate(move);
     }
 
     private void OnBecameInvisible()

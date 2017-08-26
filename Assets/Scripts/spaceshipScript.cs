@@ -8,71 +8,113 @@ using UnityEngine.UI;
 public class spaceshipScript : MonoBehaviour
 {
     public int Speed = 10;
-    public GameObject bullet;
-    
-    // EXTRA
-    public float LeftConstraint;
-    public float RightConstraint;
-    public float TopConstraint;
-    public float BottomConstraint;
-    public float Buffer;
-    private float distanceZ = 1.0f;
+    public int RotationSpeed = 200;
+    public float Inertia = 0.5f;
+    public GameObject BulletObject;
+    public double BulletDistanceFromSpaceship = 0.5;
+    public int SmoothTime = 50;
+
+    // World Constraints
+    private float _leftConstraint;
+
+    private float _rightConstraint;
+    private float _topConstraint;
+    private float _bottomConstraint;
+    private bool _shouldShoot;
+    private bool _inertial;
+    private Vector3 _velocity;
+    private float _time;
+    private bool _shouldInertia;
+
+    // Object tolerance and Camera Z position
+    private const float Buffer = 0.41f;
+
+    private const float DistanceZ = 1.0f;
+
+
+    private void OnBecameInvisible()
+    {
+        _shouldShoot = false;
+    }
+
+    private void OnBecameVisible()
+    {
+        _shouldShoot = true;
+    }
 
     void Awake()
     {
         //http://answers.unity3d.com/questions/276836/fall-off-left-side-of-screen-and-spawn-on-right.html
-        // set Vector3 to ( camera left/right limits, spaceship Y, spaceship Z )
-        // this will find a world-space point that is relative to the screen
-
-        // using the camera's position from the origin (world-space Vector3(0,0,0)
-        //leftConstraint = Camera.main.ScreenToWorldPoint( new Vector3(0.0f, 0.0f, 0 - Camera.main.transform.position.z) ).x;
-        //rightConstraint = Camera.main.ScreenToWorldPoint( new Vector3(Screen.width, 0.0f, 0 - Camera.main.transform.position.z) ).x;
-
-        // using a specific distance
-        LeftConstraint = Camera.main.ScreenToWorldPoint(new Vector3(0.0f, 0.0f, distanceZ)).x;
-        RightConstraint = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0.0f, distanceZ)).x;
-        BottomConstraint = Camera.main.ScreenToWorldPoint(new Vector3(0.0f, 0.0f, distanceZ)).y;
-        TopConstraint = Camera.main.ScreenToWorldPoint(new Vector3(0.0f, Screen.height, distanceZ)).y;
-        Buffer = 0.6f;
+        _leftConstraint = Camera.main.ScreenToWorldPoint(new Vector3(0.0f, 0.0f, DistanceZ)).x;
+        _rightConstraint = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0.0f, DistanceZ)).x;
+        _bottomConstraint = Camera.main.ScreenToWorldPoint(new Vector3(0.0f, 0.0f, DistanceZ)).y;
+        _topConstraint = Camera.main.ScreenToWorldPoint(new Vector3(0.0f, Screen.height, DistanceZ)).y;
+        GetComponent<Rigidbody2D>().inertia = Inertia;
     }
 
-    // Use this for initialization
-
     // Update is called once per frame
-    void Update()
+    private void FixedUpdate()
     {
-        // Exercise
-        float horizontal = Input.GetAxis("Horizontal") * Speed * Time.deltaTime;
+        var horizontal = Input.GetAxis("Horizontal") * RotationSpeed * Time.deltaTime;
+        var vertical = Input.GetAxis("Vertical") * Speed * Time.deltaTime;
+        transform.Translate(0, vertical, 0);
+        transform.Rotate(0, 0, -horizontal);
 
-        // Extra
-        float vertical = Input.GetAxis("Vertical") * Speed * Time.deltaTime;
-        transform.Translate(horizontal, vertical, 0);
+        //Calculate if Spaceship is inside boundaries and if not, make it appear on the opposite side.
+        CheckBoundaries();
 
-        // Extra
-        if (transform.position.x < LeftConstraint - Buffer)
-        {
-            transform.position = new Vector3(RightConstraint + Buffer, transform.position.y, transform.position.z);
-        }
-
-        if (transform.position.x > RightConstraint + Buffer)
-        {
-            transform.position = new Vector3(LeftConstraint - Buffer, transform.position.y, transform.position.z);
-        }
-
-        if (transform.position.y > TopConstraint + Buffer)
-        {
-            transform.position = new Vector3(transform.position.x, BottomConstraint - Buffer, transform.position.z);
-        }
-
-        if (transform.position.y < BottomConstraint - Buffer)
-        {
-            transform.position = new Vector3(transform.position.x, TopConstraint + Buffer, transform.position.z);
-        }
-
+        // Shoot
         if (Input.GetKeyDown("space"))
         {
-            Instantiate(bullet, transform.position, Quaternion.identity);
+            ShootBullet();
         }
+
+        // Inertial Movement
+        if (!Input.GetKeyUp("up") && !Input.GetKeyUp("down") && !Input.GetKeyUp("left") &&
+            !Input.GetKeyUp("right")) return;
+
+        InertialMovement(vertical);
+    }
+
+    private void CheckBoundaries()
+    {
+        if (transform.position.x < _leftConstraint - Buffer)
+        {
+            transform.position = new Vector3(_rightConstraint + Buffer, transform.position.y, transform.position.z);
+        }
+
+        if (transform.position.x > _rightConstraint + Buffer)
+        {
+            transform.position = new Vector3(_leftConstraint - Buffer, transform.position.y, transform.position.z);
+        }
+
+        if (transform.position.y > _topConstraint + Buffer)
+        {
+            transform.position = new Vector3(transform.position.x, _bottomConstraint - Buffer, transform.position.z);
+        }
+
+        if (transform.position.y < _bottomConstraint - Buffer)
+        {
+            transform.position = new Vector3(transform.position.x, _topConstraint + Buffer, transform.position.z);
+        }
+    }
+
+
+    private void InertialMovement(float y)
+    {
+        _velocity = new Vector2(0, y).normalized * Time.deltaTime * SmoothTime;
+        Vector2 move = _velocity * SmoothTime;
+
+        Debug.Log(move.ToString());
         
+        GetComponent<Rigidbody2D>().AddForce(move);
+    }
+
+    private void ShootBullet()
+    {
+        if (_shouldShoot)
+        {
+            Instantiate(BulletObject, transform.position, transform.rotation);
+        }
     }
 }
