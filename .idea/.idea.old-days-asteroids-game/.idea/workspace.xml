@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="9a37d84c-55ce-45b3-a1e7-d3d83f14b8a5" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/.idea.old-days-asteroids-game/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/.idea.old-days-asteroids-game/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Assets/Scripts/spaceshipScript.cs" afterPath="$PROJECT_DIR$/Assets/Scripts/spaceshipScript.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ProjectSettings/ProjectVersion.txt" afterPath="$PROJECT_DIR$/ProjectSettings/ProjectVersion.txt" />
-    </list>
+    <list default="true" id="9a37d84c-55ce-45b3-a1e7-d3d83f14b8a5" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/.idea/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -20,8 +16,8 @@
       <file leaf-file-name="spaceshipScript.cs" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Assets/Scripts/spaceshipScript.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="405">
-              <caret line="44" column="5" lean-forward="true" selection-start-line="44" selection-start-column="5" selection-end-line="44" selection-end-column="5" />
+            <state relative-caret-position="25">
+              <caret line="43" column="36" lean-forward="true" selection-start-line="43" selection-start-column="36" selection-end-line="43" selection-end-column="36" />
               <folding>
                 <marker date="1503968114526" expanded="false" signature="6:133" ph="..." />
                 <marker date="1503968114526" expanded="true" signature="179:3088" ph="{...}" />
@@ -233,7 +229,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="25893000" />
+    <option name="totallyTimeSpent" value="26047000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -535,8 +531,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Assets/Scripts/spaceshipScript.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="44" column="5" lean-forward="true" selection-start-line="44" selection-start-column="5" selection-end-line="44" selection-end-column="5" />
+        <state relative-caret-position="25">
+          <caret line="43" column="36" lean-forward="true" selection-start-line="43" selection-start-column="36" selection-end-line="43" selection-end-column="36" />
           <folding>
             <marker date="1503968114526" expanded="false" signature="6:133" ph="..." />
             <marker date="1503968114526" expanded="true" signature="179:3088" ph="{...}" />
