@@ -42,7 +42,7 @@ public class spaceshipScript : MonoBehaviour
         _shouldShoot = true;
     }
 
-    void Awake()
+    private void Awake()
     {
         //http://answers.unity3d.com/questions/276836/fall-off-left-side-of-screen-and-spawn-on-right.html
         _leftConstraint = Camera.main.ScreenToWorldPoint(new Vector3(0.0f, 0.0f, DistanceZ)).x;
@@ -55,12 +55,6 @@ public class spaceshipScript : MonoBehaviour
     // Update is called once per frame
     private void FixedUpdate()
     {
-        var horizontal = Input.GetAxis("Horizontal") * RotationSpeed * Time.deltaTime;
-        var vertical = Input.GetAxis("Vertical") * Speed * Time.deltaTime;
-        transform.Translate(0, vertical, 0);
-        transform.Rotate(0, 0, -horizontal);
-
-        //Calculate if Spaceship is inside boundaries and if not, make it appear on the opposite side.
         CheckBoundaries();
 
         // Shoot
@@ -70,10 +64,14 @@ public class spaceshipScript : MonoBehaviour
         }
 
         // Inertial Movement
-        if (!Input.GetKeyUp("up") && !Input.GetKeyUp("down") && !Input.GetKeyUp("left") &&
-            !Input.GetKeyUp("right")) return;
+        if (!Input.GetKey("up") && !Input.GetKey("down") && !Input.GetKey("left") &&
+            !Input.GetKey("right")) return;
 
-        InertialMovement(vertical);
+        var horizontal = Input.GetAxis("Horizontal") * RotationSpeed * Time.deltaTime;
+        var force = Vector2.up * Input.GetAxis("Vertical") * Speed * Time.deltaTime;
+
+        GetComponent<Rigidbody2D>().AddRelativeForce(force);
+        transform.Rotate(0, 0, -horizontal);
     }
 
     private void CheckBoundaries()
@@ -97,17 +95,6 @@ public class spaceshipScript : MonoBehaviour
         {
             transform.position = new Vector3(transform.position.x, _topConstraint + Buffer, transform.position.z);
         }
-    }
-
-
-    private void InertialMovement(float y)
-    {
-        _velocity = new Vector2(0, y).normalized * Time.deltaTime * SmoothTime;
-        Vector2 move = _velocity * SmoothTime;
-
-        Debug.Log(move.ToString());
-        
-        GetComponent<Rigidbody2D>().AddForce(move);
     }
 
     private void ShootBullet()
