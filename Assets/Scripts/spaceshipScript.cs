@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class spaceshipScript : MonoBehaviour
 {
-    public int Speed = 10;
+    public int Speed = 30;
     public int RotationSpeed = 200;
     public float Inertia = 0.5f;
     public GameObject BulletObject;
@@ -17,6 +17,7 @@ public class spaceshipScript : MonoBehaviour
     // World Constraints
     private float _leftConstraint;
 
+    //Não é javascript!!!! hhehehehehe
     private float _rightConstraint;
     private float _topConstraint;
     private float _bottomConstraint;
@@ -25,6 +26,8 @@ public class spaceshipScript : MonoBehaviour
     private Vector3 _velocity;
     private float _time;
     private bool _shouldInertia;
+
+    private Rigidbody2D _rigidbody2D;
 
     // Object tolerance and Camera Z position
     private const float Buffer = 0.41f;
@@ -49,7 +52,8 @@ public class spaceshipScript : MonoBehaviour
         _rightConstraint = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0.0f, DistanceZ)).x;
         _bottomConstraint = Camera.main.ScreenToWorldPoint(new Vector3(0.0f, 0.0f, DistanceZ)).y;
         _topConstraint = Camera.main.ScreenToWorldPoint(new Vector3(0.0f, Screen.height, DistanceZ)).y;
-        GetComponent<Rigidbody2D>().inertia = Inertia;
+        //GetComponent<Rigidbody2D>().inertia = Inertia;
+        this._rigidbody2D = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
@@ -57,8 +61,12 @@ public class spaceshipScript : MonoBehaviour
     {
         var horizontal = Input.GetAxis("Horizontal") * RotationSpeed * Time.deltaTime;
         var vertical = Input.GetAxis("Vertical") * Speed * Time.deltaTime;
-        transform.Translate(0, vertical, 0);
+
+        this._rigidbody2D.AddRelativeForce(Vector2.up * Input.GetAxis("Vertical") * Speed * Time.deltaTime);
+        //transform.Translate(0, vertical, 0);
         transform.Rotate(0, 0, -horizontal);
+
+
 
         //Calculate if Spaceship is inside boundaries and if not, make it appear on the opposite side.
         CheckBoundaries();
@@ -70,10 +78,10 @@ public class spaceshipScript : MonoBehaviour
         }
 
         // Inertial Movement
-        if (!Input.GetKeyUp("up") && !Input.GetKeyUp("down") && !Input.GetKeyUp("left") &&
-            !Input.GetKeyUp("right")) return;
+       // if (!Input.GetKeyUp("up") && !Input.GetKeyUp("down") && !Input.GetKeyUp("left") &&
+         //   !Input.GetKeyUp("right")) return;
 
-        InertialMovement(vertical);
+        //InertialMovement(vertical);
     }
 
     private void CheckBoundaries()
@@ -100,7 +108,7 @@ public class spaceshipScript : MonoBehaviour
     }
 
 
-    private void InertialMovement(float y)
+ /*   private void InertialMovement(float y)
     {
         _velocity = new Vector2(0, y).normalized * Time.deltaTime * SmoothTime;
         Vector2 move = _velocity * SmoothTime;
@@ -108,7 +116,7 @@ public class spaceshipScript : MonoBehaviour
         Debug.Log(move.ToString());
         
         GetComponent<Rigidbody2D>().AddForce(move);
-    }
+    }*/
 
     private void ShootBullet()
     {
