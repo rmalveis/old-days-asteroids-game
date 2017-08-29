@@ -17,9 +17,7 @@ public class spaceshipScript : MonoBehaviour
     private float _rightConstraint;
     private float _topConstraint;
     private float _bottomConstraint;
-    private bool _shouldShoot;
     private Vector3 _velocity;
-    private float _time;
 
     // Object tolerance and Camera Z position
     private const float Buffer = 0.41f;
@@ -27,16 +25,6 @@ public class spaceshipScript : MonoBehaviour
     private const float DistanceZ = 1.0f;
     private Rigidbody2D _rb;
 
-
-    private void OnBecameInvisible()
-    {
-        _shouldShoot = false;
-    }
-
-    private void OnBecameVisible()
-    {
-        _shouldShoot = true;
-    }
 
     private void Awake()
     {
@@ -95,9 +83,6 @@ public class spaceshipScript : MonoBehaviour
 
     private void ShootBullet()
     {
-        if (_shouldShoot)
-        {
-            Instantiate(BulletObject, transform.position, transform.rotation);
-        }
+        Instantiate(BulletObject, transform.position, transform.rotation);
     }
 }
